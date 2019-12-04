@@ -1,0 +1,26 @@
+<launch>
+  <arg name="gui" default="true" />
+  <arg name="leaf_size" default="0.01" />
+
+  <node pkg="nodelet" type="nodelet" name="pcl_manager" args="manager" output="screen" />
+
+  <!-- Run a VoxelGrid filter to clean NaNs and downsample the data -->
+  <node pkg="nodelet" type="nodelet" name="voxel_grid" args="load pcl/VoxelGrid pcl_manager" output="screen">
+    <remap from="~input" to="/camera_astra/depth/points" />
+    <rosparam>
+      filter_field_name: z
+      filter_limit_min: 0.01
+      filter_limit_max: 1.5
+      filter_limit_negative: False
+      leaf_size: $(arg leaf_size)
+    </rosparam>
+  </node>
+
+  <group if="$(arg gui)">
+    <node name="rviz"
+          pkg="rviz" type="rviz"
+          args="-d $(find pcl_ros)/samples/pcl_ros/filters/config/camera_voxel_grid.rviz">
+    </node>
+  </group>
+  
+</launch>
