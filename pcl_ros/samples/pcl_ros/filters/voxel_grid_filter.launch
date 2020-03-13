@@ -6,14 +6,16 @@
 
   <!-- Run a VoxelGrid filter to clean NaNs and downsample the data -->
   <node pkg="nodelet" type="nodelet" name="voxel_grid" args="load pcl/VoxelGrid pcl_manager" output="screen">
-    <remap from="~input" to="/camera_astra/depth/points" />
+    <!-- <remap from="~input" to="/camera_astra/depth/points" /> -->
+    <remap from="~input" to="/camera_astra/depth_registered/points" />
     <rosparam>
       filter_field_name: z
       filter_limit_min: 0.01
-      filter_limit_max: 1.5
+      filter_limit_max: 1.0
       filter_limit_negative: False
-      leaf_size: $(arg leaf_size)
+      <!-- leaf_size: $(arg leaf_size)$ -->
     </rosparam>
+    <param name = "leaf_size" value = "$(arg leaf_size)"/>
   </node>
 
   <group if="$(arg gui)">
